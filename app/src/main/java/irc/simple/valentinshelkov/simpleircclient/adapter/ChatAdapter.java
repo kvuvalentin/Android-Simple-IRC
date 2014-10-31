@@ -11,15 +11,19 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import irc.simple.valentinshelkov.simpleircclient.R;
 import irc.simple.valentinshelkov.simpleircclient.data.MessageData;
 
 public class ChatAdapter extends ArrayAdapter<MessageData> {
 
-    public static final String AWESOME_APP = "#awesome_app";
-
+    public static final String AWESOME_APP = "#awesome_app ";
+    public static final String HASH_TAG_REGEXP = "(#+[a-z\\d][\\w_-][^\\s#]*)";
+    private static final Pattern HASH_TAG_PATTERN = Pattern.compile(HASH_TAG_REGEXP);
     public ChatAdapter(Context context, List<MessageData> data) {
         super(context, R.layout.message_text, data);
     }
@@ -42,17 +46,28 @@ public class ChatAdapter extends ArrayAdapter<MessageData> {
         holder.messageText.setGravity(message.getTextGravity());
         holder.messageText.setTextColor(message.getTextColor());
         Spannable text = new SpannableString(message.getText());
-        if (message.getText().contains(AWESOME_APP)) {
-            int index = 0;
-            int old = 0;
-            while (index >= 0) {
-                index = message.getText().indexOf(AWESOME_APP, old);
-                if (index == -1) break;
-                old = index + AWESOME_APP.length();
-                text.setSpan(new ForegroundColorSpan(Color.RED), index, index + AWESOME_APP.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            }
+        if (message.getText().contains("#")) {
+            parseHashTag(text);
         }
         holder.messageText.setText(text);
+    }
+
+    private void parseHashTag(Spannable text) {
+        int index = 0;
+        int old = 0;
+        LinkedList<String> matches = new LinkedList<String>();
+        Matcher m = HASH_TAG_PATTERN.matcher(text.toString());
+        while (m.find()){
+            matches.add(m.group());
+        }
+        while (index >= 0) {
+            String s = matches.poll();
+            if(s == null) break;
+            index = text.toString().indexOf(s, old);
+            if (index == -1) break;
+            old = index + s.length();
+            text.setSpan(new ForegroundColorSpan(Color.RED), index, index + s.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
     }
 
     private View newView(ViewGroup parent, ViewHolder holder) {
