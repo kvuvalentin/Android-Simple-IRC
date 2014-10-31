@@ -22,7 +22,7 @@ import irc.simple.valentinshelkov.simpleircclient.data.MessageData;
 public class ChatAdapter extends ArrayAdapter<MessageData> {
 
     public static final String AWESOME_APP = "#awesome_app ";
-    public static final String HASH_TAG_REGEXP = "(#+[a-z\\d][\\w_-][^\\s\\W]*)";
+    public static final String HASH_TAG_REGEXP = "(#+[a-zа-яа-їüÀ-ÖØ-öø-ÿ\\d]{0}[\\w_-][^\\s\\W]*)";
     private static final Pattern HASH_TAG_PATTERN = Pattern.compile(HASH_TAG_REGEXP);
     public ChatAdapter(Context context, List<MessageData> data) {
         super(context, R.layout.message_text, data);

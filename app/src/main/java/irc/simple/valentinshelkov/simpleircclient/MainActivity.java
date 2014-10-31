@@ -23,6 +23,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import org.apache.commons.lang.RandomStringUtils;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
@@ -221,6 +223,12 @@ public class MainActivity extends Activity {
                         break;
                     case 26:
                         builder.append(ChatAdapter.AWESOME_APP);
+                        break;
+                    default:
+                        builder.append(" ");
+                        builder.append("#");
+                        builder.append(RandomStringUtils.randomAlphanumeric(1+rInt/3));
+                        builder.append(" ");
                         break;
                 }
                 // Get random id
