@@ -45,7 +45,9 @@ public class ChatAdapter extends ArrayAdapter<MessageData> {
         MessageData message = getItem(position);
         holder.messageText.setGravity(message.getTextGravity());
         holder.messageText.setTextColor(message.getTextColor());
+        String client = message.getText().split(": ")[0];
         Spannable text = new SpannableString(message.getText());
+        text.setSpan(new ForegroundColorSpan(Color.CYAN), 0, client.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         if (message.getText().contains("#")) {
             parseHashTag(text);
         }
